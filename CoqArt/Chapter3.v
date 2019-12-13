@@ -202,6 +202,51 @@ Section Minimal_propositional_logic.
 
 (* Exercise 3.3 - TODO *)
 
+Lemma id_P_1 : P -> P.
+Proof.
+  intros p; assumption.
+Qed.
+
+Lemma id_PP_1 : (P -> P) -> (P -> P).
+Proof.
+  intros Hpp p; assumption.
+Qed.
+
+Lemma imp_trans_1 : (P -> Q) -> (Q -> R) -> P -> R.
+Proof.
+  intros Hpq Hqr p; apply Hqr; apply Hpq; assumption.
+Qed.
+
+Lemma imp_perm_1 : (P -> Q -> R) -> (Q -> P -> R).
+Proof.
+  intros Hpqr q p; apply Hpqr; assumption.
+Qed.
+
+Lemma ignore_Q_1 : (P -> R) -> P -> Q -> R.
+Proof.
+  intros Hpr p q; apply Hpr; assumption.
+Abort.
+
+Lemma delta_imp_1 : (P -> P -> Q) -> P -> Q.
+Proof.
+  intros Hppq p; apply Hppq; assumption.
+Qed.
+
+Lemma delta_impR_1 : (P -> Q) -> (P -> P -> Q).
+Proof.
+  intros Hpq p0 p1; apply Hpq; assumption.
+Qed.
+
+Lemma diamond_1 : (P -> Q) -> (P -> R) -> (Q -> R -> T) -> P -> T.
+Proof.
+  intros Hpq Hpr Hqrt p; apply Hqrt; (apply Hpr || apply Hpq); assumption.
+Qed.
+
+Lemma weak_peirce_1 : ((((P -> Q) -> P) -> P) -> Q) -> Q.
+Proof.
+  auto. (*TODO*)
+Qed.
+
 (* Section 3.7 *)
 
   Section section_for_cut_example.
@@ -223,7 +268,7 @@ Section Minimal_propositional_logic.
     Print cut_example.
   End section_for_cut_example.
 
-(* Exercise 3.5 TODO *)
+(* Exercise 3.5 *)
 
 End Minimal_propositional_logic.
 
