@@ -1,12 +1,13 @@
+(* http://www.cse.chalmers.se/research/group/logic/TypesSS05/resources/coq/CoqArt/contents.html *)
+
 (* Chapter 3 *)
+(* Section 3.1 *)
 
 Require Import Arith.
 Require Import ZArith.
 Require Import Bool.
 
 Section Minimal_propositional_logic.
-
-(* Section 3.1 *)
 
   Variables P Q R T : Prop.
 
