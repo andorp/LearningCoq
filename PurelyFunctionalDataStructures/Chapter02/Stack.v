@@ -44,32 +44,50 @@ Section list_stack_implementation.
     : forall (A : Type)
     , list_is_empty (list_empty A) = true.
   Proof.
-  Admitted.
+    intros A.
+    simpl.
+    trivial.
+  Qed.
   
   Theorem list_empty_cons
     : forall (A : Type) (a : A) (s : list A) , list_is_empty (list_cons a s) = false.
   Proof.
-  Admitted.
+    intros A a s.
+    simpl.
+    trivial.
+  Qed.
   
   Theorem list_head_empty
     : forall (A : Type) , list_head (list_empty A) = None.
   Proof.
-  Admitted.
+    intros A.
+    simpl.
+    trivial.
+  Qed.
   
   Theorem list_head_cons 
     : forall (A : Type) (a : A) (s : list A) , list_head (list_cons a s) = Some a.
   Proof.
-  Admitted.
+    intros A a s.
+    simpl.
+    trivial.
+  Qed.
   
   Theorem list_tail_empty
     : forall (A : Type) , list_tail (list_empty A) = None.
   Proof.
-  Admitted.
+    intros A.
+    simpl.
+    trivial.
+  Qed.
   
   Theorem list_tail_cons 
     : forall (A : Type) (a : A) (s : list A) , list_tail (list_cons a s) = Some s.
   Proof.
-  Admitted.
+    intros A a s.
+    simpl.
+    trivial.
+  Qed.
   
   Instance listStack : Stack list :=
     { empty     A     := list_empty A
@@ -86,3 +104,4 @@ Section list_stack_implementation.
     }.
 
 End list_stack_implementation.
+
