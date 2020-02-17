@@ -201,8 +201,7 @@ Theorem lh_delete_min
 Proof.
 Admitted.
 
-(* TODO: Figure out how to instanciate this *)
-(* Instance leftish {E : Type} `{o : ordered E} : heap (leftish_heap E) E :=
+Instance leftish {E : Type} `{o : ordered E} : heap (leftish_heap E) E :=
   { empty     := lh_empty
   ; isEmpty   := lh_isEmpty
   ; insert    := lh_insert
@@ -210,15 +209,16 @@ Admitted.
   ; findMin   := lh_findMin
   ; deleteMin := lh_deleteMin
 
-  ; empty_is_empty          := lh_empty_is_empty
-  ; non_empty_is_not_empty  := lh_non_empty_is_not_empty
-  ; merge_empty_left        := lh_merge_empty_left
-  ; merge_empty_right       := lh_merge_empty_right
-  ; empty_findMin           := lh_empty_findMin
-  ; empty_deleteMin         := lh_empty_deleteMin
-  ; insert_min              := lh_insert_min
-  ; insert_non_min          := lh_insert_non_min
-  ; merge_min_left          := lh_merge_min_left
-  ; merge_min_right         := lh_merge_min_right
-  ; delete_min              := lh_delete_min
-  }. *)
+  (* Type and ordered instance come from the type class, thus we use _ _ *)
+  ; empty_is_empty          := lh_empty_is_empty _
+  ; non_empty_is_not_empty  := lh_non_empty_is_not_empty _ _
+  ; merge_empty_left        := lh_merge_empty_left _ _
+  ; merge_empty_right       := lh_merge_empty_right _ _
+  ; empty_findMin           := lh_empty_findMin _ _
+  ; empty_deleteMin         := lh_empty_deleteMin _ _
+  ; insert_min              := lh_insert_min _ _
+  ; insert_non_min          := lh_insert_non_min _ _
+  ; merge_min_left          := lh_merge_min_left _ _
+  ; merge_min_right         := lh_merge_min_right _ _
+  ; delete_min              := lh_delete_min _ _
+  }.
