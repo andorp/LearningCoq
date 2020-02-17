@@ -89,7 +89,7 @@ Definition rank {E : Type} (e : leftish_heap E) : nat :=
   end.
 
 (* Cannot guess decreasing argument of fix. *)
-(* Definition makeT {E : Type} (x : E) (a : leftish_heap E) (b : leftish_heap E) : leftish_heap E :=
+Definition makeT {E : Type} (x : E) (a : leftish_heap E) (b : leftish_heap E) : leftish_heap E :=
   if (rank b) <? (rank a)
     then Node E (rank b + 1) x a b
     else Node E (rank a + 1) x b a.
@@ -102,28 +102,6 @@ Fixpoint merge {E : Type} `{o : ordered E} (e1 : leftish_heap E) (e2 : leftish_h
         if leq x y
           then makeT x a1 (merge b1 h2)
           else makeT y a2 (merge h1 b2)
-  end. *)
-
-Fixpoint lh_merge {E : Type} `{o : ordered E} (e1 : leftish_heap E) (e2 : leftish_heap E) : leftish_heap E :=
-  match e1, e2 with
-    | h, Empty _ => h
-    | Empty _, h => h
-    | Node _ _ x a1 b1 as h1, Node _ _ y a2 b2 as h2 =>
-        if leq x y
-          then (let a := a1 in
-                let b := lh_merge b1 h2 in
-                let ra := rank a in
-                let rb := rank b
-                in if rank b <? rank a
-                    then Node E (rb + 1) x a b
-                    else Node E (ra + 1) x b a)
-          else (let a := a1 in
-                let b := lh_merge b1 h2 in
-                let ra := rank a in
-                let rb := rank b
-                in if rank b <? rank a
-                    then Node E (rb + 1) x a b
-                    else Node E (ra + 1) x b a)
   end.
 
 Definition lh_insert {E : Type} `{o : ordered E} (x : E) (h : leftish_heap E) : leftish_heap E :=
