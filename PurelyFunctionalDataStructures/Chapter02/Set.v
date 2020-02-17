@@ -8,10 +8,13 @@ Class ordered (T : Type) :=
       , eq t1 t2 = eq t2 t1
   ; lt_asym
       : forall (t1 t2 : T) (b : bool)
-      , (lt t1 t2 = true) -> (lt t2 t1 = false)
+      , lt t1 t2 = true -> lt t2 t1 = false
   ; eq_implies_leq
       : forall (t1 t2 : T)
-      , eq t1 t2 = true -> lt t1 t2 = true -> leq t1 t2 = true
+      , eq t1 t2 = true -> leq t1 t2 = true
+  ; lt_implies_leq
+      : forall (t1 t2 : T)
+      , lt t1 t2 = true -> leq t1 t2 = true
   ; lt_not_eq
       : forall (t1 t2 : T)
       , lt t1 t2 = true -> eq t1 t2 = false
@@ -55,7 +58,13 @@ Section OrderedNat.
 
   Theorem nat_eq_implies_leq
     : forall (t1 t2 : nat)
-    , nat_eq t1 t2 = true -> nat_lt t1 t2 = true -> nat_leq t1 t2 = true.
+    , nat_eq t1 t2 = true -> nat_leq t1 t2 = true.
+  Proof.
+  Admitted.
+
+  Theorem nat_lt_implies_leq
+    : forall (t1 t2 : nat)
+    , nat_lt t1 t2 = true -> nat_leq t1 t2 = true.
   Proof.
   Admitted.
 
@@ -72,6 +81,7 @@ Section OrderedNat.
     ; eq_sym          := nat_eq_sym
     ; lt_asym         := nat_lt_asym
     ; eq_implies_leq  := nat_eq_implies_leq
+    ; lt_implies_leq  := nat_lt_implies_leq
     ; lt_not_eq       := nat_lt_not_eq
     }.
 
@@ -169,4 +179,3 @@ Instance unbalanced_set_tree {A : Type} `{o : ordered A} : set (tree A) A :=
   }.
 
 End UnbalancedSet.
-
