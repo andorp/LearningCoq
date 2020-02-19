@@ -94,23 +94,82 @@ Definition makeT {E : Type} (x : E) (a : leftish_heap E) (b : leftish_heap E) : 
     then Node E (rank b + 1) x a b
     else Node E (rank a + 1) x b a.
 
-Fixpoint merge {E : Type} `{o : ordered E} (e1 : leftish_heap E) (e2 : leftish_heap E) : leftish_heap E :=
+(* FAIL *)
+Fail Fixpoint lh_merge1 {E : Type} {o : ordered E} (e1 : leftish_heap E) (e2 : leftish_heap E) : leftish_heap E :=
   match e1, e2 with
     | h, Empty _ => h
     | Empty _, h => h
     | Node _ _ x a1 b1 as h1, Node _ _ y a2 b2 as h2 =>
         if leq x y
-          then makeT x a1 (merge b1 h2)
-          else makeT y a2 (merge h1 b2)
+          then makeT x a1 (lh_merge1 b1 h2)
+          else makeT y a2 (lh_merge1 h1 b2)
   end.
 
+(* the name 'merge' seems to be in scope already *)
+Fixpoint lh_merge (E:Type) (o:ordered E) (e1 e2:leftish_heap E) : leftish_heap E :=
+match e1 with
+| Empty _ => e2
+| Node _ _ x a1 b1 as h1  =>
+   (fix g (e2' : leftish_heap E) : leftish_heap E :=
+        match e2' with
+        | Empty _   => e1
+        | Node _ _ y a2 b2 as h2 =>
+           if leq x y
+              then makeT x a1 (lh_merge _ _ b1 h2)
+              else makeT y a2 (g b2) 
+        end) e2
+end.
+
+(* declares arguments as implicit going forward *)
+Arguments lh_merge {E} {o}.
+Arguments Empty  {E}.
+Arguments Node {E}.
+
+(* These 4 lemmas to check that lh_merge as the intended semantics *)
+Lemma checkMerge1 : forall (E:Type) (o:ordered E) (e:leftish_heap E),
+  lh_merge Empty e = e.
+Proof.
+  intros E o e.
+  reflexivity.
+Qed.
+
+Lemma checkMerge2 : forall (E:Type) (o:ordered E) (e:leftish_heap E),
+  lh_merge e Empty = e.
+Proof.
+  intros E o. destruct e as [|x a b]; reflexivity.
+Qed.
+
+Lemma checkMerge3
+  : forall (E:Type) (o:ordered E) (e1 e2:leftish_heap E)
+  , forall (n m:nat) (x y:E) (a1 b1 a2 b2:leftish_heap E) ,
+  e1 = Node n x a1 b1 ->
+  e2 = Node m y a2 b2 ->
+  leq x y = true ->
+  lh_merge e1 e2 = makeT x a1 (lh_merge b1 e2).
+Proof.
+  intros E o e1 e2 n m x y a1 b1 a2 b2 H1 H2 H.
+  rewrite H1, H2. simpl. rewrite H. reflexivity.
+Qed.
+
+Lemma checkMerge4
+  : forall (E:Type) (o:ordered E) (e1 e2:leftish_heap E), 
+    forall (n m:nat) (x y:E) (a1 b1 a2 b2:leftish_heap E),
+  e1 = Node n x a1 b1 ->
+  e2 = Node m y a2 b2 ->
+  leq x y = false ->
+  lh_merge e1 e2 = makeT y a2 (lh_merge e1 b2).
+Proof.
+  intros E o e1 e2 n m x y a1 b1 a2 b2 H1 H2 H.
+  rewrite H1, H2. simpl. rewrite H. reflexivity.
+Qed.
+
 Definition lh_insert {E : Type} `{o : ordered E} (x : E) (h : leftish_heap E) : leftish_heap E :=
-  lh_merge (Node E 1 x (Empty E) (Empty E)) h.
+  lh_merge (Node 1 x Empty Empty) h.
 
 Definition lh_deleteMin {E : Type} `{o : ordered E} (h : leftish_heap E) : option (leftish_heap E) :=
   match h with
-    | Empty _         => None
-    | Node  _ _ x a b => Some (lh_merge a b)
+    | Empty         => None
+    | Node  _ x a b => Some (lh_merge a b)
   end.
 
 Theorem lh_empty_is_empty
